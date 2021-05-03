@@ -920,6 +920,12 @@ export default {
       }
     },
   },
+  updated() {
+    if (!localStorage.token && this.$route.path !== '/') {
+      this.$router.push('/?redirect='.concat(this.$route.path));
+      this.$router.replace(this.$route.query.redirect || '/');
+    }
+  },
 };
 </script>
 

@@ -833,6 +833,8 @@ export default {
     this.getDeleteOperations();
     this.getBlocks();
     this.getAccounts();
+    // this.$router.push(this.$route.path);
+    console.log(this.$route.path);
   },
 };
 </script>

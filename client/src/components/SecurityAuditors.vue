@@ -149,14 +149,40 @@ export default {
         };
         this.updateEntity(payload, oldfirstname, oldlastname);
       } else if (this.edit_column === 'last_name') {
-        const payload = {
-          oldFirstName: oldfirstname,
-          oldLastname: oldlastname,
-          firstName: oldfirstname,
-          lastName: this.content,
+        const payloadd = {
+          username: oldfirstname.concat(' ', this.content),
         };
-        console.log(payload.lastName);
-        this.updateEntity(payload, oldfirstname, oldlastname);
+        const path = 'http://localhost:5001/get_entity_info';
+        axios.put(path, payloadd)
+          .then((response) => {
+            if (response.data.flag === 'False') {
+              this.$swal({
+                icon: 'error',
+                type: 'success',
+                title: 'Search Results',
+                text: 'A User with this lastname already exists in the system.',
+              });
+              this.getEntities();
+            } else {
+              const payload = {
+                oldFirstName: oldfirstname,
+                oldLastname: oldlastname,
+                firstName: oldfirstname,
+                lastName: this.content,
+              };
+              console.log(payload.lastName);
+              this.updateEntity(payload, oldfirstname, oldlastname);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            this.$swal({
+              icon: 'error',
+              type: 'success',
+              title: 'Search Results',
+              text: 'The requested User is not found! Pleasy try again.',
+            });
+          });
       } else {
         const payload = {
           oldFirstName: oldfirstname,

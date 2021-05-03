@@ -4,11 +4,11 @@ import time
 import schedule
 
 def start():
-    subprocess.Popen(['./ldap_starter.sh'], shell = True)
-    t = 10
-    time.sleep(t)
-    subprocess.call(['/opt/anaconda3/bin/python ./ldap_con.py'], shell=True)
-    subprocess.Popen(['/opt/anaconda3/bin/python ./server_conn.py'], shell=True)
+    # subprocess.Popen(['./ldap_starter.sh'], shell = True)
+    # t = 10
+    # time.sleep(t)
+    subprocess.call(['/home/george/anaconda3/bin/python3.8 ./ldap_con.py'], shell=True)
+    subprocess.Popen(['/home/george/anaconda3/bin/python3.8 ./server_conn.py'], shell=True)
     time.sleep(300)
     subprocess.Popen(['./client/vue_run.sh'], shell=True)
     time.sleep(20)

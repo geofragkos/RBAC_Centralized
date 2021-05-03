@@ -12,8 +12,8 @@ import base64
 import rbac_der_demo_getterv2 as getter
 
 
-#log_file = open("./log.txt","w")
-#sys.stdout = log_file
+log_file = open("./log.txt","a")
+sys.stdout = log_file
 
 # Configuration
 DEBUG = False
@@ -606,7 +606,7 @@ def verify_utr():
 
 @app.route('/download', methods=['POST'])
 def download():
-    f = '/Users/geo_fragkos/Desktop/Sandia/Sandia_Centralized_LDAP/openldap-2.4.57/openLDAP_Automation/log.txt'
+    f = '/home/george/Desktop/Sandia_RBAC/Centralized_OpenLDAP/log.txt'
     return send_file(f,attachment_filename='test.txt',as_attachment=True)
 
 @app.route('/find_info', methods=['PUT'])
@@ -1886,7 +1886,7 @@ if __name__ == '__main__':
 
     end = time.time()
     print('Connection Instantiation: '+str(end-start))
-    app.run(host='localhost', port=5001)
+    app.run(host='localhost', port=5001, threaded=True)
     print('End')
 
 
