@@ -37,35 +37,7 @@
    </div>
     <h1 class="mt-4 text-center">Query Page - Find what you want!</h1>
     <form>
-        <div  onmouseover="this.style.background='#E0E0E0';"
-        onmouseout="this.style.background='#f2f2f2';">
-        <h2>Search User </h2>
-        <br>
-        <div class="row g-3 align-items-center">
-            <div class="col-auto">
-                <label for="username" class="col-form-label">Username</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" v-model="username" id="inputPassword6"
-                class="form-control"
-                placeholder="Ex: George Fragkos">
-            </div>
-            <div class="col-auto">
-                <span id="passwordHelpInline" class="form-text">
-                (Must contain First Name and Last Name)
-                </span>
-            </div>
-        </div>
-        <br>
-      <button type="button" @click="onSubmit,successAlert()"
-      class="btn btn-danger btn-sm" style='font-size:15px;'>
-        Search
-      </button>
-      </div>
-      <br>
-      <br>
-      <br>
-      <div  onmouseover="this.style.background='#E0E0E0';"
+            <div  onmouseover="this.style.background='#E0E0E0';"
         onmouseout="this.style.background='#f2f2f2';">
       <h2>Add User </h2>
         <br>
@@ -132,24 +104,27 @@
    <br>
    <br>
    <br>
-      <div  onmouseover="this.style.background='#E0E0E0';"
+        <div  onmouseover="this.style.background='#E0E0E0';"
         onmouseout="this.style.background='#f2f2f2';">
-        <h2>Search DER </h2>
+        <h2>Search User </h2>
         <br>
         <div class="row g-3 align-items-center">
             <div class="col-auto">
-                <label for="der_number" class="col-form-label">DER Device</label>
+                <label for="username" class="col-form-label">Username</label>
             </div>
             <div class="col-auto">
-                <input type="text" v-model="der_number" id="inputPassword6"
+                <input type="text" v-model="username" id="inputPassword6"
                 class="form-control"
-                placeholder="Ex: DER 1234">
+                placeholder="Ex: George Fragkos">
             </div>
             <div class="col-auto">
+                <span id="passwordHelpInline" class="form-text">
+                (Must contain First Name and Last Name)
+                </span>
             </div>
         </div>
         <br>
-      <button type="button" @click="onSubmit,successDERSearchAlert()"
+      <button type="button" @click="onSubmit,successAlert()"
       class="btn btn-danger btn-sm" style='font-size:15px;'>
         Search
       </button>
@@ -157,7 +132,7 @@
       <br>
       <br>
       <br>
-            <div  onmouseover="this.style.background='#E0E0E0';"
+                  <div  onmouseover="this.style.background='#E0E0E0';"
         onmouseout="this.style.background='#f2f2f2';">
       <h2>Add DER Device </h2>
         <br>
@@ -196,6 +171,31 @@
    <br>
    <br>
    <br>
+      <div  onmouseover="this.style.background='#E0E0E0';"
+        onmouseout="this.style.background='#f2f2f2';">
+        <h2>Search DER </h2>
+        <br>
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="der_number" class="col-form-label">DER Device</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" v-model="der_number" id="inputPassword6"
+                class="form-control"
+                placeholder="Ex: DER 1234">
+            </div>
+            <div class="col-auto">
+            </div>
+        </div>
+        <br>
+      <button type="button" @click="onSubmit,successDERSearchAlert()"
+      class="btn btn-danger btn-sm" style='font-size:15px;'>
+        Search
+      </button>
+      </div>
+      <br>
+      <br>
+      <br>
          <div  onmouseover="this.style.background='#E0E0E0';"
         onmouseout="this.style.background='#f2f2f2';">
       <h2>Verify User-To-Role Assignment </h2>
@@ -234,34 +234,6 @@
    <br>
    <br>
    <br>
-           <div  onmouseover="this.style.background='#E0E0E0';"
-        onmouseout="this.style.background='#f2f2f2';">
-        <h2>Delete User </h2>
-        <br>
-        <div class="row g-3 align-items-center">
-            <div class="col-auto">
-                <label for="delete_username" class="col-form-label">Username</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" v-model="delete_username" id="inputPassword6"
-                class="form-control"
-                placeholder="Ex: George Fragkos">
-            </div>
-            <div class="col-auto">
-                <span id="passwordHelpInline" class="form-text">
-                (Must contain First Name and Last Name)
-                </span>
-            </div>
-        </div>
-        <br>
-      <button type="button" @click="onSubmit,successDeleteAlert()"
-      class="btn btn-danger btn-sm" style='font-size:15px;'>
-        Delete
-      </button>
-      </div>
-      <br>
-      <br>
-      <br>
        <div  onmouseover="this.style.background='#E0E0E0';"
         onmouseout="this.style.background='#f2f2f2';">
       <h2>Check Permissions </h2>
@@ -296,6 +268,34 @@
    <br>
    <br>
    <br>
+              <div  onmouseover="this.style.background='#E0E0E0';"
+        onmouseout="this.style.background='#f2f2f2';">
+        <h2>Delete User </h2>
+        <br>
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="delete_username" class="col-form-label">Username</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" v-model="delete_username" id="inputPassword6"
+                class="form-control"
+                placeholder="Ex: George Fragkos">
+            </div>
+            <div class="col-auto">
+                <span id="passwordHelpInline" class="form-text">
+                (Must contain First Name and Last Name)
+                </span>
+            </div>
+        </div>
+        <br>
+      <button type="button" @click="onSubmit,successDeleteAlert()"
+      class="btn btn-danger btn-sm" style='font-size:15px;'>
+        Delete
+      </button>
+      </div>
+      <br>
+      <br>
+      <br>
            <div  onmouseover="this.style.background='#E0E0E0';"
         onmouseout="this.style.background='#f2f2f2';">
         <h2>Search OpenLDAP Information </h2>
