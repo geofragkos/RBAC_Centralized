@@ -73,16 +73,14 @@
               <button
                       type="button"
                       class="btn btn-warning btn-sm" style='font-size:15px;'
-                      @click="onClickItem(key, entity.firstName, entity.lastName, entity.role);
-                      successAlert()">
+                      @click="onClickItem(key, entity.firstName, entity.lastName, entity.role);">
                   Update Entity
               </button>
               <button
                       type="button"
                       class="btn btn-danger btn-sm" style='font-size:15px;'
                       @click="onClickItemRevoke(key, entity.firstName,
-                      entity.lastName, entity.role);
-                      revokeAlert(entity.role)">
+                      entity.lastName, entity.role);">
                   Revoke Role
               </button>
                 <button
@@ -343,6 +341,11 @@ export default {
       const path = 'http://localhost:5001/sp4revoke';
       axios.put(path, payload)
         .then(() => {
+          this.$swal({
+            type: 'success',
+            title: 'Revoke Role Success',
+            text: 'Role is successfuly revoked!',
+          });
           this.getEntities();
         })
         .catch((error) => {

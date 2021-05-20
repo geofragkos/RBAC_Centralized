@@ -73,16 +73,14 @@
               <button
                       type="button"
                       class="btn btn-warning btn-sm" style='font-size:15px;'
-                      @click="onClickItem(key, entity.firstName, entity.lastName);
-                      successAlert()">
+                      @click="onClickItem(key, entity.firstName, entity.lastName);">
                   Update Entity
               </button>
               <button
                       type="button"
                       class="btn btn-danger btn-sm" style='font-size:15px;'
                       @click="onClickItemRevoke(key, entity.firstName,
-                      entity.lastName);
-                      revokeAlert()">
+                      entity.lastName);">
                   Revoke Role
               </button>
                 </div>
@@ -152,18 +150,20 @@ export default {
         };
         this.updateEntity(payload, oldfirstname, oldlastname);
       } else if (this.edit_column === 'last_name') {
+        this.content = this.content.trimStart();
+        this.content = this.content.trimEnd();
         const payloadd = {
           username: oldfirstname.concat(' ', this.content),
         };
-        const path = 'http://localhost:5001/get_entity_info';
+        const path = 'http://localhost:5001/check_entity_info';
         axios.put(path, payloadd)
           .then((response) => {
-            if (response.data.flag === 'False') {
+            if (response.data.flag === 'True') {
               this.$swal({
                 icon: 'error',
                 type: 'success',
                 title: 'Search Results',
-                text: 'A User with this lastname already exists in the system.',
+                text: 'A User with this Last Name already exists in the system.',
               });
               this.getEntities();
             } else {
@@ -175,6 +175,11 @@ export default {
               };
               console.log(payload.lastName);
               this.updateEntity(payload, oldfirstname, oldlastname);
+              this.$swal({
+                type: 'success',
+                title: 'Update Success',
+                text: 'DER Entity is successfuly updated!',
+              });
             }
           })
           .catch((error) => {
@@ -272,6 +277,11 @@ export default {
       const path = 'http://localhost:5001/secadminsrevoke';
       axios.put(path, payload)
         .then(() => {
+          this.$swal({
+            type: 'success',
+            title: 'Revoke Role Success',
+            text: 'Role is successfuly revoked!',
+          });
           this.getEntities();
         })
         .catch((error) => {

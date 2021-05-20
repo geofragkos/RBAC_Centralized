@@ -73,16 +73,14 @@
               <button
                       type="button"
                       class="btn btn-warning btn-sm" style='font-size:15px;'
-                      @click="onClickItem(key, entity.firstName, entity.lastName, entity.role);
-                      successAlert()">
+                      @click="onClickItem(key, entity.firstName, entity.lastName, entity.role);">
                   Update Entity
               </button>
               <button
                       type="button"
                       class="btn btn-danger btn-sm" style='font-size:15px;'
                       @click="onClickItemRevoke(key, entity.firstName,
-                      entity.lastName, entity.role);
-                      revokeAlert(entity.role)">
+                      entity.lastName, entity.role);">
                   Revoke Role
               </button>
                   <button
@@ -162,6 +160,8 @@ export default {
     },
     onClickItem(key, oldfirstname, oldlastname, oldrole) {
       if (this.edit_column === 'first_name') {
+        this.content = this.content.trimStart();
+        this.content = this.content.trimEnd();
         const payload = {
           oldFirstName: oldfirstname,
           oldLastname: oldlastname,
@@ -169,21 +169,29 @@ export default {
           firstName: this.content,
           lastName: oldlastname,
           role: oldrole,
+          username: this.content.concat(' ', oldlastname),
         };
         this.updateEntity(payload, oldfirstname, oldlastname);
+        this.$swal({
+          type: 'success',
+          title: 'Update Success',
+          text: 'DER Entity is successfuly updated!',
+        });
       } else if (this.edit_column === 'last_name') {
+        this.content = this.content.trimStart();
+        this.content = this.content.trimEnd();
         const payloadd = {
           username: oldfirstname.concat(' ', this.content),
         };
-        const path = 'http://localhost:5001/get_entity_info';
+        const path = 'http://localhost:5001/check_entity_info';
         axios.put(path, payloadd)
           .then((response) => {
-            if (response.data.flag === 'False') {
+            if (response.data.flag === 'True') {
               this.$swal({
                 icon: 'error',
                 type: 'success',
                 title: 'Search Results',
-                text: 'A User with this lastname already exists in the system.',
+                text: 'A User with this Username already exists in the system.',
               });
               this.getEntities();
             } else {
@@ -197,6 +205,11 @@ export default {
               };
               console.log(payload.lastName);
               this.updateEntity(payload, oldfirstname, oldlastname);
+              this.$swal({
+                type: 'success',
+                title: 'Update Success',
+                text: 'DER Entity is successfuly updated!',
+              });
             }
           })
           .catch((error) => {
@@ -218,6 +231,11 @@ export default {
           role: this.content,
         };
         this.updateEntity(payload, oldfirstname, oldlastname);
+        this.$swal({
+          type: 'success',
+          title: 'Update Success',
+          text: 'DER Entity is successfuly updated!',
+        });
       }
     },
     onClickItemRevoke(key, oldfirstname, oldlastname, oldrole) {
@@ -227,7 +245,17 @@ export default {
         lastName: oldlastname,
         role: '',
       };
-      this.revokeRole(payload);
+      console.log(!(payload.oldRole));
+      if (!(payload.oldRole)) {
+        this.$swal({
+          icon: 'error',
+          type: 'success',
+          title: 'Permission Results',
+          text: 'The entity has no role.',
+        });
+      } else {
+        this.revokeRole(payload);
+      }
     },
     onClickItemPerm(key, parsedFirstname, parsedLastname, parsedRole) {
       const payload = {
@@ -331,6 +359,11 @@ export default {
       const path = 'http://localhost:5001/sp2modify';
       axios.put(path, payload)
         .then(() => {
+          this.$swal({
+            type: 'success',
+            title: 'Revoke Role Success',
+            text: 'Role is successfuly revoked!',
+          });
           this.getEntities();
         })
         .catch((error) => {

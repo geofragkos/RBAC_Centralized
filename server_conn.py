@@ -79,10 +79,96 @@ def update_profile_util(new_firstname, new_lastname, new_role, old_firstname, ol
             ldap_con.connection.modify('cn='+old_lastname+',o='+utility+',dc=my-domain,dc=com',{'sn': [(MODIFY_REPLACE, [new_firstname])]})
 
 def revoke_role_util(last_name, old_role, new_role, utility):
-    ldap_con.connection.delete('cn='+old_role+',cn='+last_name+',o='+utility+',dc=my-domain,dc=com')
+    entry_dn = 'cn='+last_name+',o='+utility+',dc=my-domain,dc=com'
+    if(('Utility' in str(utility))):
+        for (model, perms) in getter.perm_dict['utility_or_dso'].items():
+            for (perm_id, valuee) in perms[0].items():
+                if valuee == '':
+                    continue
+                else:
+                    dn_string = 'cn='+perm_id+','+'cn='+str(model)+',cn='+old_role+','+str(entry_dn)
+                    ldap_con.connection.delete(dn_string)
+            ldap_con.connection.delete('cn='+str(model)+',cn='+old_role+','+str(entry_dn))
+
+    if('Service Provider' in str(utility)):
+        for (model, perms) in getter.perm_dict['der_vendor_or_service_provider'].items():
+            for (perm_id, valuee) in perms[0].items():
+                if valuee == '':
+                    continue
+                else:
+                    dn_string = 'cn='+perm_id+','+'cn='+str(model)+',cn='+old_role+','+str(entry_dn)
+                    ldap_con.connection.delete(dn_string)
+            ldap_con.connection.delete('cn='+str(model)+',cn='+old_role+','+str(entry_dn))
+
+    if('DER Owners' in str(utility)):
+        for (model, perms) in getter.perm_dict['der_owner'].items():
+            for (perm_id, valuee) in perms[0].items():
+                if valuee == '':
+                    continue
+                else:
+                    dn_string = 'cn='+perm_id+','+'cn='+str(model)+',ou='+role+','+str(entry_dn)
+                    ldap_con.connection.delete(dn_string)
+            ldap_con.connection.delete('cn='+str(model)+',ou='+old_role+','+str(entry_dn))
+
+    if('DER Owners' in str(utility)):
+        ldap_con.connection.delete('ou='+old_role+','+str(entry_dn))
+        ldap_con.connection.delete(str(entry_dn))
+
+        item = {
+            'firstName': name_list[0],
+            'lastName': name_list[1],
+            'role': der_device
+        }
+        DEROWNERS.remove(item)
+    else:
+        ldap_con.connection.delete('cn='+old_role+','+str(entry_dn))
+
 
 def revoke_role_derowners(last_name, old_role, new_role, utility):
-    ldap_con.connection.delete('cn='+last_name+',o='+utility+',dc=my-domain,dc=com')
+    entry_dn = 'cn='+last_name+',o='+utility+',dc=my-domain,dc=com'
+    if(('Utility' in str(utility))):
+        for (model, perms) in getter.perm_dict['utility_or_dso'].items():
+            for (perm_id, valuee) in perms[0].items():
+                if valuee == '':
+                    continue
+                else:
+                    dn_string = 'cn='+perm_id+','+'cn='+str(model)+',cn='+old_role+','+str(entry_dn)
+                    ldap_con.connection.delete(dn_string)
+            ldap_con.connection.delete('cn='+str(model)+',cn='+old_role+','+str(entry_dn))
+
+    if('Service Provider' in str(utility)):
+        for (model, perms) in getter.perm_dict['der_vendor_or_service_provider'].items():
+            for (perm_id, valuee) in perms[0].items():
+                if valuee == '':
+                    continue
+                else:
+                    dn_string = 'cn='+perm_id+','+'cn='+str(model)+',cn='+old_role+','+str(entry_dn)
+                    ldap_con.connection.delete(dn_string)
+            ldap_con.connection.delete('cn='+str(model)+',cn='+old_role+','+str(entry_dn))
+
+    if('DER Owners' in str(utility)):
+        old_role = 'DER Owner'
+        for (model, perms) in getter.perm_dict['der_owner'].items():
+            for (perm_id, valuee) in perms[0].items():
+                if valuee == '':
+                    continue
+                else:
+                    dn_string = 'cn='+perm_id+','+'cn='+str(model)+',ou='+old_role+','+str(entry_dn)
+                    ldap_con.connection.delete(dn_string)
+            ldap_con.connection.delete('cn='+str(model)+',ou='+old_role+','+str(entry_dn))
+
+    if('DER Owners' in str(utility)):
+        ldap_con.connection.delete('ou='+old_role+','+str(entry_dn))
+        ldap_con.connection.delete(str(entry_dn))
+    else:
+        if('Security Admins' in str(utility)):
+            ldap_con.connection.delete(entry_dn)
+
+        elif('Security Auditors' in str(utility)):
+            ldap_con.connection.delete(entry_dn)
+        else:
+            ldap_con.connection.delete('cn='+old_role+','+str(entry_dn))
+
 
 
 def remove_entity_util1(entity_id, check):
@@ -378,6 +464,46 @@ def get_entity_info():
         print('Search User Query Time: '+ str(end-start))
         return jsonify(response_object)
 
+@app.route('/check_entity_info', methods=['PUT'])
+def check_entity_info():
+    start = time.time()
+    response_object = {'status': 'success'}
+    response_object['flag'] = 'True'
+    if request.method == 'PUT':
+        post_data = request.get_json()
+        original_username = post_data.get('username')
+        username = original_username
+        username = username.split(' ')
+        first_name = username[0]
+        last_name = username[1]
+        role = 'DER Owner'
+        if(ldap_con.connection.search('dc=my-domain,dc=com', '(&(cn='+last_name+'))', attributes=['*'])):
+            for entry in ldap_con.connection.entries:
+                entity = entry.entry_dn.split(',')
+                entity = entity[1].split('=')
+                entity = entity[1]
+
+                ldap_con.connection.search('cn='+last_name+',o='+entity+',dc=my-domain,dc=com', '(&(objectClass=organizationalRole))',search_scope=SUBTREE,attributes=['*'])
+                for sub_entry in ldap_con.connection.entries:
+                    role = sub_entry.entry_dn.split(',')
+                    role = role[0].split('=')
+                    role = role[1]
+                    print(role)
+
+
+        else:
+            entity = ''
+            role = ''
+            response_object['flag'] = 'False'
+
+        response_object['entity'] = entity
+        response_object['role'] = role
+        end = time.time()
+        print('Search User Query Time: '+ str(end-start))
+        return jsonify(response_object)
+
+
+
 def add_owner_device(username, role, device):
     name_list = username.split(' ')
     dn_string = 'cn='+name_list[1]+',o=DER Owners,dc=my-domain,dc=com'
@@ -627,7 +753,6 @@ def find_info():
 
 @app.route('/delete_user', methods=['PUT'])
 def delete_user():
-    print('MPIKA')
     start = time.time()
     response_object = {'status': 'success'}
     response_object['flag'] = 'True'

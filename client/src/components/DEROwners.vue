@@ -81,8 +81,7 @@
                       type="button"
                       class="btn btn-danger btn-sm" style='font-size:15px;'
                       @click="onClickItemRevoke(key, entity.firstName,
-                      entity.lastName, entity.role);
-                      revokeAlert()">
+                      entity.lastName, entity.role);">
                   Revoke Role
               </button>
                 <button
@@ -321,6 +320,11 @@ export default {
       const path = 'http://localhost:5001/derownersrevoke';
       axios.put(path, payload)
         .then(() => {
+          this.$swal({
+            type: 'success',
+            title: 'Revoke Role Success',
+            text: 'Role is successfuly revoked!',
+          });
           this.getEntities();
         })
         .catch((error) => {
